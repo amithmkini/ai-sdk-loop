@@ -5,7 +5,7 @@ import Textarea from "react-textarea-autosize"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
-import { useEnterSubmit } from "@/lib/use-enter-submit"
+import { useEnterSubmit } from "@/lib/hooks/use-enter-submit"
 
 export default function PromptForm() {
 

@@ -1,21 +1,27 @@
 import { ChatList } from "@/components/chat-list"
 import InputPrompt from "@/components/input-prompt"
 
-import { UserMessage, RobotMessage } from "@/components/messages"
+import { UserMessage, BotMessage, SystemMessage, SpinnerMessage } from "@/components/messages/message"
 
 
 const messages = [
   {
-    display: <UserMessage>Hi</UserMessage>,
+    display: <UserMessage content="Hello" />,
   },
   {
-    display: <RobotMessage>Hello</RobotMessage>,
+    display: <SystemMessage content="This is a system message" />,
   },
   {
-    display: <UserMessage>How are you?</UserMessage>,
+    display: <BotMessage content="Hi there" />,
   },
   {
-    display: <RobotMessage>Good, thanks</RobotMessage>,
+    display: <UserMessage content="How are you?" />,
+  },
+  {
+    display: <BotMessage content="I'm doing well, thank you" />,
+  },
+  {
+    display: <SpinnerMessage />,
   }
 ]
 
