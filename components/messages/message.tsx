@@ -20,21 +20,21 @@ export function UserMessage({ content }: MessageProps ) {
         <MessageMarkdown content={text} />
       </div>
     </div>
-  );
+  )
 }
 
 export function BotMessage({ content }: MessageProps ) {
   const text = useStreamableText(content)
   return (
-    <div className="flex flex-row justify-center md:-ml-12 items-center">
-      <div className="flex size-8 select-none items-center justify-center rounded-full border bg-background shadow-sm">
+    <div className="flex flex-row justify-center md:-ml-12 items-start">
+      <div className="flex flex-col size-8 select-none items-center justify-center rounded-full border bg-background shadow-sm">
         <RobotOutlined />
       </div>
       <div className="ml-4 flex-1 space-y-2 overflow-hidden pl-2 flex items-center">
         <MessageMarkdown content={text} />
       </div>
     </div>
-  );
+  )
 }
 
 export function SystemMessage({ content }: { content: string }) {

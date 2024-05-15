@@ -51,22 +51,22 @@ export default function PromptForm() {
           e.target &&
           ['INPUT', 'TEXTAREA'].includes((e.target as any).nodeName)
         ) {
-          return;
+          return
         }
-        e.preventDefault();
-        e.stopPropagation();
+        e.preventDefault()
+        e.stopPropagation()
         if (inputRef?.current) {
-          inputRef.current.focus();
+          inputRef.current.focus()
         }
       }
-    };
+    }
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [inputRef]);
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [inputRef])
 
   return (
     <div className="fixed inset-x-0 bottom-2 w-full">
@@ -104,5 +104,5 @@ export default function PromptForm() {
         </form>
       </div>
     </div>
-  );
+  )
 }
