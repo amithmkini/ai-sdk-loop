@@ -1,21 +1,73 @@
 import "server-only"
 
+
 import {
   createAI,
-  getAIState
+  createStreamableUI,
+  getAIState,
+  getMutableAIState
 } from "ai/rsc"
+import { Message } from "ai"
+
+import { nanoid } from "nanoid"
 
 import { 
   AIState,
   UIState
 } from '@/lib/types'
 import { runAsyncFnWithoutBlocking } from "@/lib/utils"
-import { Message } from "ai"
-import { BotMessage, SystemMessage, UserMessage } from "@/components/messages/message"
+import { BotMessage, SystemMessage, UserMessage, SpinnerMessage } from "@/components/messages/message"
 
+
+async function submitUserMessage(content: string) {
+  "use server"
+
+  const aiState = getMutableAIState<typeof AI>()
+
+  // Add the user message to the AI state
+  aiState.update([
+    ...aiState.get(),
+    {
+      id: nanoid(),
+      role: "user",
+      content
+    }
+  ])
+
+  // For now, add some delay to simulate the AI thinking
+  // and respond back with the same message
+  const responseUI = createStreamableUI(<></>)
+  const spinnerUI = createStreamableUI(<SpinnerMessage />)
+  const spinnerWithResponseUI = createStreamableUI(
+    <>
+      {responseUI.value}
+      {spinnerUI.value}
+    </>
+  )
+
+  runAsyncFnWithoutBlocking(async () => {
+    // Wait for 2 seconds
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    // Update the spinner UI to the response
+    responseUI.done(<BotMessage content={content + "!!!"} />)
+    spinnerUI.done(<></>)
+    spinnerWithResponseUI.done()
+    aiState.done([
+      ...aiState.get(),
+    ])
+  })
+
+  return {
+    id: nanoid(),
+    display: spinnerWithResponseUI.value
+  }
+}
 
 export const AI = createAI<AIState, UIState>({
-  actions: {},
+  actions: {
+    submitUserMessage
+  },
   initialUIState: [],
   initialAIState: [],
   onGetUIState: async () => {

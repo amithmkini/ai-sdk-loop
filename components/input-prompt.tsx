@@ -1,21 +1,47 @@
 "use client"
 
+import { useActions, useUIState } from "ai/rsc"
+import { nanoid } from "nanoid"
 import { useState, useRef, useEffect } from "react"
 import Textarea from "react-textarea-autosize"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
+import { type AI } from "@/lib/actions"
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit"
+import { UserMessage } from "./messages/message"
 
 export default function PromptForm() {
 
-  const [inputValue, setInputValue] = useState('');
-  const { formRef, onKeyDown } = useEnterSubmit();
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [inputValue, setInputValue] = useState('')
+  const { formRef, onKeyDown } = useEnterSubmit()
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+  const { submitUserMessage } = useActions()
+  const [_, setMessages] = useUIState<typeof AI>()
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setInputValue('');
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const value = inputValue.trim()
+    setInputValue('')
+
+    if (value === '') {
+      return
+    }
+
+    setMessages(currentMessages => [
+      ...currentMessages,
+      {
+        id: nanoid(),
+        display: <UserMessage content={value} />,
+      }
+    ])
+
+    const responseMessage = await submitUserMessage(value)
+    setMessages(currentMessages => [
+      ...currentMessages,
+      responseMessage
+    ])
   }
 
   useEffect(() => {
