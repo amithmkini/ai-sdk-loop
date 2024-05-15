@@ -1,3 +1,5 @@
+// Copied from https://github.com/mckaywrigley/chatbot-ui/blob/0c6f619eb33c8d9b4203cab9be751373f8259725/components/messages/message-markdown.tsx
+
 import React, { FC, memo } from "react"
 import ReactMarkdown, { Options } from "react-markdown"
 import remarkGfm from "remark-gfm"

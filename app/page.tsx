@@ -1,39 +1,40 @@
-import { ChatList } from "@/components/chat-list"
-import InputPrompt from "@/components/input-prompt"
-
+import { Chat } from "@/components/chat"
 import { UserMessage, BotMessage, SystemMessage, SpinnerMessage } from "@/components/messages/message"
-
+import { AI } from "@/lib/actions"
+import { AIState } from "@/lib/types"
 
 const messages = [
   {
-    display: <UserMessage content="Hello" />,
+    id: "1",
+    role: "user",
+    content: "Hello",
   },
   {
-    display: <SystemMessage content="This is a system message" />,
+    id: "2",
+    role: "system",
+    content: "This is a system message"
   },
   {
-    display: <BotMessage content="Hi there" />,
+    id: "3",
+    role: "assistant",
+    content: "Hi there"
   },
   {
-    display: <UserMessage content="How are you?" />,
+    id: "4",
+    role: "user",
+    content: "How are you?"
   },
   {
-    display: <BotMessage content="I'm doing well, thank you" />,
-  },
-  {
-    display: <SpinnerMessage />,
+    id: "5",
+    role: "assistant",
+    content: "I'm doing well, thank you"
   }
-]
+] as AIState
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-grow h-full focus-visible:outline-0">
-      <div>
-        <div className="pb-[200px] pt-4 md:pt-10">
-          <ChatList messages={messages} />
-        </div>
-        <InputPrompt />
-      </div>
-    </div>
+    <AI initialAIState={messages}>
+      <Chat />
+    </AI>
   )
 }

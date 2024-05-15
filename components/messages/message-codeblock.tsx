@@ -1,3 +1,5 @@
+// Copied from https://github.com/mckaywrigley/chatbot-ui/blob/0c6f619eb33c8d9b4203cab9be751373f8259725/components/messages/message-codeblock.tsx
+
 import { Button } from "@/components/ui/button"
 import { useCopyToClipboard } from "@/lib/hooks/use-copy-to-clipboard"
 import { CheckIcon, CopyIcon, DownloadIcon } from "@radix-ui/react-icons"
