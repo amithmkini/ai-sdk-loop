@@ -1,68 +1,74 @@
 import "server-only"
 
-
+import {
+  CoreMessage,
+} from "ai"
 import {
   createAI,
   createStreamableUI,
   getAIState,
-  getMutableAIState
+  getMutableAIState,
+  streamUI
 } from "ai/rsc"
-import { Message } from "ai"
-
+import { openai } from "@ai-sdk/openai"
 import { nanoid } from "nanoid"
 
-import { 
+import {
   AIState,
   UIState
 } from '@/lib/types'
-import { runAsyncFnWithoutBlocking } from "@/lib/utils"
-import { BotMessage, SystemMessage, UserMessage, SpinnerMessage } from "@/components/messages/message"
+import {
+  UserMessage,
+  BotMessage,
+  SystemMessage,
+  SpinnerMessage
+} from "@/components/messages"
 
 
-async function submitUserMessage(content: string) {
+export const dynamic = "force-dynamic"
+
+async function askLLM(iteration: number, response: any) {
+  console.log("Iteration %d: Start", iteration)
+  const result = createStreamableUI(<SpinnerMessage />);
+  console.log("Iteration %d: Result created", iteration)
+  response.append(result.value);
+  console.log("Iteration %d: Result appended", iteration);
+  
+  // Simulate multiple calls to the API and responses
+  // IIFE
+  (async () => {
+    console.log("Iteration %d: Async start", iteration)
+    // Wait for 2 seconds before responding
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    console.log("Iteration %d: Async Waited for 2 sec", iteration)
+    result.done(<div>{"Response from: " + iteration}</div>)
+    console.log("Iteration %d: Async Result done", iteration)
+    // Ask AI 3 times before ending the conversation
+    if (iteration < 2) {
+      console.log("Iteration %d: Async Calling next iter", iteration)
+      await askLLM(iteration + 1, response)
+      console.log("Iteration %d: Async Calling next iter done", iteration)
+    } else {
+      console.log("Iteration %d: Async No Calling", iteration)
+      response.done()
+      console.log("Iteration %d: Async Response Done", iteration)
+    }
+  })();
+  console.log("Iteration %d: Function end", iteration)
+}
+
+async function submitUserMessage() {
   "use server"
 
-  const aiState = getMutableAIState<typeof AI>()
-
-  // Add the user message to the AI state
-  aiState.update([
-    ...aiState.get(),
-    {
-      id: nanoid(),
-      role: "user",
-      content
-    }
-  ])
-
-  // For now, add some delay to simulate the AI thinking
-  // and respond back with the same message
-  const responseUI = createStreamableUI(<></>)
-  const spinnerUI = createStreamableUI(<SpinnerMessage />)
-  const spinnerWithResponseUI = createStreamableUI(
-    <>
-      {responseUI.value}
-      {spinnerUI.value}
-    </>
-  )
-
-  runAsyncFnWithoutBlocking(async () => {
-    // Wait for 2 seconds
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // Update the spinner UI to the response
-    responseUI.done(<BotMessage content={content + "!!!"} />)
-    spinnerUI.done(<></>)
-    spinnerWithResponseUI.done()
-    aiState.done([
-      ...aiState.get(),
-    ])
-  })
+  const response = createStreamableUI(<>Testing</>)
+  await askLLM(0, response)
 
   return {
     id: nanoid(),
-    display: spinnerWithResponseUI.value
+    display: response.value
   }
 }
+
 
 export const AI = createAI<AIState, UIState>({
   actions: {
@@ -79,7 +85,7 @@ export const AI = createAI<AIState, UIState>({
     const aiState = getAIState() as AIState
     const uiState = aiState.map((message) => {
       return {
-        id: message.id,
+        id: nanoid(),
         display: getDisplayContent(message)
       }
     })
@@ -88,7 +94,7 @@ export const AI = createAI<AIState, UIState>({
   }
 })
 
-const getDisplayContent = (message: Message) => {
+const getDisplayContent = (message: CoreMessage) => {
   switch (message.role) {
     case "user":
       return <UserMessage content={message.content} />

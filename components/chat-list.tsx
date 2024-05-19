@@ -16,7 +16,7 @@ export function ChatList({ messages }: { messages: UIState }) {
         }
 
         return (
-          <div key={message.id} className="py-2">
+          <div key={message.id} className="flex flex-col gap-2 py-2">
             {message.display !== null && message.display}
           </div>
         )

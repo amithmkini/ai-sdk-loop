@@ -30,7 +30,7 @@ export function BotMessage({ content }: MessageProps ) {
       <div className="flex flex-col size-8 select-none items-center justify-center rounded-full border bg-background shadow-sm">
         <RobotOutlined />
       </div>
-      <div className="ml-4 flex-1 space-y-2 overflow-hidden pl-2 flex items-center">
+      <div className="ml-4 flex-1 space-y-2 overflow-hidden pl-2 flex items-center mt-1">
         <MessageMarkdown content={text} />
       </div>
     </div>
