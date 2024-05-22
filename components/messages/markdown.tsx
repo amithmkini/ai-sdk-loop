@@ -30,7 +30,7 @@ export const MessageMarkdown: FC<MessageMarkdownProps> = ({ content }) => {
           return <p className="mb-2 last:mb-0">{children}</p>
         },
         img({ node, ...props }) {
-          return <Image alt="Response" className="max-w-[67%]" {...props as any} />
+          return <Image alt="Response" className="max-w-[67%]" {...props as any} width={500} height={500} />
         },
         code({ node, className, children, ...props }) {
           const childArray = React.Children.toArray(children)

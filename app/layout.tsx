@@ -38,7 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <main className="flex flex-col flex-1 bg-muted/50 dark:bg-background">
+          <main className="flex flex-col flex-1">
             {children}
           </main>
           <Toaster />

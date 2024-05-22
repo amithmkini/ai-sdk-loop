@@ -1,6 +1,8 @@
-import { CoreMessage } from "ai"
+import { Message } from "ai"
 
-export type AIState = Array<CoreMessage>
+export type OpenAIMessage = Omit<Message, 'id'>
+
+export type AIState = Array<OpenAIMessage>
 
 export type UIState = {
   id: string
